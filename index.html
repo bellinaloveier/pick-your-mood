@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Gimana Perasaanmu Hari Ini? ♡</title>
+
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=Playfair+Display:wght@500;600&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "DM Sans", sans-serif;
+      background: #fff3f9;
+      color: #4b3d3a;
+      overflow-x: hidden;
+    }
+
+    /* DEKORASI*/
+
+    .decoration {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      user-select: none;
+    }
+
+    .flower {
+      font-size: 30px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .flower.one {
+      top: 8%;
+      left: 7%;
+    }
+
+    .flower.two {
+      top: 15%;
+      right: 8%;
+      animation-delay: 1s;
+    }
+
+    .flower.three {
+      bottom: 12%;
+      left: 10%;
+      animation-delay: 2s;
+    }
+
+    .sparkle {
+      font-size: 18px;
+      animation: twinkle 2s ease-in-out infinite;
+    }
+
+    .sparkle.one {
+      top: 25%;
+      left: 18%;
+    }
+
+    .sparkle.two {
+      bottom: 25%;
+      right: 17%;
+      animation-delay: .7s;
+    }
+
+    .sparkle.three {
+      top: 10%;
+      right: 25%;
+      animation-delay: 1.2s;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0) rotate(-5deg);
+      }
+      50% {
+        transform: translateY(-10px) rotate(5deg);
+      }
+    }
+
+    @keyframes twinkle {
+      0%, 100% {
+        opacity: .3;
+        transform: scale(.8);
+      }
+      50% {
+        opacity: 1;
+        transform: scale(1.2);
+      }
+    }
+
+    /* MAIN */
+
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 620px;
+      text-align: center;
+    }
+
+    .mini-label {
+      display: inline-block;
+      background: #f9e6e1;
+      color: #a46e66;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      font-family: "Playfair Display", serif;
+      font-size: clamp(36px, 7vw, 58px);
+      line-height: 1.1;
+      font-weight: 600;
+      color: #463634;
+      margin-bottom: 14px;
+    }
+
+    .subtitle {
+      color: #927f7a;
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 400px;
+      margin: 0 auto 34px;
+    }
+
+    /* MG */
+
+    .mood-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      margin-bottom: 24px;
+    }
+
+    .mood-card {
+      border: 1px solid #f0ddd8;
+      background: rgba(255, 255, 255, .8);
+      border-radius: 24px;
+      padding: 22px 15px;
+      cursor: pointer;
+      transition: all .25s ease;
+      font-family: inherit;
+      color: #554542;
+      box-shadow: 0 8px 25px rgba(122, 87, 78, .05);
+    }
+
+    .mood-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(122, 87, 78, .1);
+      border-color: #e8c6bf;
+      background: #fff;
+    }
+
+    .mood-card:active {
+      transform: scale(.97);
+    }
+
+    .mood-card:last-child {
+      grid-column: span 2;
+    }
+
+    .emoji {
+      display: block;
+      font-size: 38px;
+      margin-bottom: 10px;
+    }
+
+    .mood-title {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 5px;
+    }
+
+    .mood-description {
+      display: block;
+      font-size: 11px;
+      color: #a3918d;
+    }
+
+    /* HASIL */
+
+    .result {
+      display: none;
+    }
+
+    .result.show {
+      display: block;
+      animation: appear .5s ease forwards;
+    }
+
+    @keyframes appear {
+      from {
+        opacity: 0;
+        transform: translateY(18px) scale(.98);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .result-card {
+      background: rgba(255, 255, 255, .9);
+      border: 1px solid #f0ddd8;
+      border-radius: 30px;
+      padding: 38px 30px;
+      box-shadow: 0 20px 60px rgba(122, 87, 78, .1);
+    }
+
+    .result-emoji {
+      font-size: 64px;
+      margin-bottom: 15px;
+      display: block;
+      animation: bounce .7s ease;
+    }
+
+    @keyframes bounce {
+      0% {
+        transform: scale(.5);
+      }
+      60% {
+        transform: scale(1.15);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .result-label {
+      font-size: 12px;
+      color: #a58d88;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+
+    .result-title {
+      font-family: "Playfair Display", serif;
+      font-size: 32px;
+      color: #493936;
+      margin-bottom: 16px;
+    }
+
+    .result-message {
+      max-width: 430px;
+      margin: 0 auto 25px;
+      color: #756460;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+
+    .gift {
+      background: #fff7f3;
+      border-radius: 20px;
+      padding: 18px;
+      margin: 0 auto 25px;
+      max-width: 390px;
+    }
+
+    .gift-label {
+      font-size: 11px;
+      color: #ad8178;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 7px;
+    }
+
+    .gift-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #594541;
+      line-height: 1.5;
+    }
+
+    .try-again {
+      border: none;
+      background: #55423e;
+      color: white;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 13px 24px;
+      border-radius: 100px;
+      cursor: pointer;
+      transition: all .2s ease;
+    }
+
+    .try-again:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(85, 66, 62, .2);
+    }
+
+    /* FOOTER */
+
+    .footer {
+      margin-top: 28px;
+      color: #b19e99;
+      font-size: 11px;
+    }
+
+    /* MOBILE */
+
+    @media (max-width: 480px) {
+      .app {
+        padding: 30px 16px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
+
+      .subtitle {
+        font-size: 14px;
+        margin-bottom: 28px;
+      }
+
+      .mood-grid {
+        gap: 10px;
+      }
+
+      .mood-card {
+        padding: 19px 10px;
+        border-radius: 20px;
+      }
+
+      .emoji {
+        font-size: 32px;
+      }
+
+      .result-card {
+        padding: 32px 20px;
+      }
+
+      .result-title {
+        font-size: 28px;
+      }
+
+      .flower {
+        font-size: 23px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Decorative elements -->
+  <div class="decoration flower one">🌷</div>
+  <div class="decoration flower two">🌼</div>
+  <div class="decoration flower three">🌸</div>
+
+  <div class="decoration sparkle one">✦</div>
+  <div class="decoration sparkle two">✧</div>
+  <div class="decoration sparkle three">⋆</div>
+
+  <main class="app">
+
+    <div class="container">
+
+      <!-- SCREEN pertanyaan -->
+
+      <section id="questionScreen">
+
+        <h1>
+          Gimana perasaanmu<br />
+          hari ini?
+        </h1>
+
+        <p class="subtitle">
+          Pilih yang paling terasa cocok 🌷
+        </p>
+
+        <div class="mood-grid">
+
+          <button class="mood-card" data-mood="happy">
+            <span class="emoji">🌸</span>
+            <span class="mood-title">Aku lagi senang</span>
+            <span class="mood-description">hari ini terasa menyenangkan</span>
+          </button>
+
+          <button class="mood-card" data-mood="tired">
+            <span class="emoji">☁️</span>
+            <span class="mood-title">Aku agak lelah</span>
+            <span class="mood-description">rasanya butuh istirahat</span>
+          </button>
+
+          <button class="mood-card" data-mood="hug">
+            <span class="emoji">🧸</span>
+            <span class="mood-title">Aku pengen ditemenin</span>
+            <span class="mood-description">rasanya nggak ingin sendirian</span>
+          </button>
+
+          <button class="mood-card" data-mood="sad">
+            <span class="emoji">🌧️</span>
+            <span class="mood-title">Aku lagi nggak baik-baik aja</span>
+            <span class="mood-description">hari ini terasa cukup berat</span>
+          </button>
+
+          <button class="mood-card" data-mood="excited">
+            <span class="emoji">🎀</span>
+            <span class="mood-title">Aku lagi semangat!</span>
+            <span class="mood-description">aku siap melakukan sesuatu</span>
+          </button>
+
+        </div>
+
+        <p class="footer">
+          made by ♡
+        </p>
+
+      </section>
+
+
+      <!-- SCREEN HASIL -->
+
+      <section id="resultScreen" class="result">
+
+        <div class="result-card">
+
+          <span id="resultEmoji" class="result-emoji">🌸</span>
+
+          <h2 id="resultTitle" class="result-title">
+            Hari yang lembut
+          </h2>
+
+          <p id="resultMessage" class="result-message">
+            ...
+          </p>
+
+          <div class="gift">
+
+            <div class="gift-label">
+              ✦ note for you ✦
+            </div>
+
+            <div id="giftText" class="gift-text">
+              ...
+            </div>
+
+          </div>
+
+          <button id="tryAgain" class="try-again">
+            Pilih lagi ♡
+          </button>
+
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <script>
+
+    /* DATA MOOD */
+
+    const moods = {
+
+      happy: {
+        emoji: "🌸",
+        title: "Awww, senang dengernya!♡",
+        message:
+          "Semoga hari ini terus kasih kamu banyak alasan kecil buat senyum. Enjoy every moment! You deserve it 🌷",
+        gift:
+          "Jangan lupa simpan satu momen manis dari hari ini. Biar nanti bisa kamu ingat-ingat lagi hehe."
+      },
+
+      tired: {
+        emoji: "☁️",
+        title: "Pelan-pelan aja",
+        message:
+          "Kayaknya hari ini kamu butuh sedikit waktu buat recharge. Nggak apa-apa kok kalau mau pelan-pelan dulu. Take your time ☕",
+        gift:
+          "Hari ini kamu nggak harus selalu produktif. Rebahan sebentar, dengerin lagu kesukaan, atau sekadar bengong juga boleh banget hehe."
+      },
+
+      hug: {
+        emoji: "🧸",
+        title: "A little company for you ♡",
+        message:
+          "Hehe, kayaknya hari ini kamu lagi pengen ada yang nemenin yaa. So here I am! Anggap aja kita lagi duduk bareng sambil ngobrolin hal random.",
+        gift:
+          "Kalau mau, putar lagu favoritmu, cari posisi paling nyaman, terus stay here for a little while. No rush 🧸"
+      },
+
+      sad: {
+        emoji: "🌧️",
+        title: "Sending you a little hug ♡",
+        message:
+          "Kayaknya hari ini lagi nggak terlalu baik sama kamu. It’s okay, kamu nggak harus pura-pura baik-baik aja. Semoga besok terasa sedikit lebih ringan ya.",
+        gift:
+          "Nanti kalau sudah agak enakan, coba cari satu hal kecil yang bisa bikin kamu senyum. Misalnya beli es cream hehe 🍦"
+      },
+
+      excited: {
+        emoji: "🎀",
+        title: "YAYYY, I love this energy!",
+        message:
+          "Senang lihat kamu lagi semangat! Semoga energi baik ini membawa kamu ke banyak hal seru hari ini. Go get it, girl!",
+        gift:
+          "Kalau ada sesuatu yang dari tadi pengen kamu lakukan, mungkin ini saat yang tepat buat mulai. Nggak perlu sempurna, just have fun!♡"
+      }
+
+    };
+
+
+    /* ELEMEN */
+
+    const moodCards = document.querySelectorAll(".mood-card");
+
+    const questionScreen = document.getElementById("questionScreen");
+    const resultScreen = document.getElementById("resultScreen");
+
+    const resultEmoji = document.getElementById("resultEmoji");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultMessage = document.getElementById("resultMessage");
+    const giftText = document.getElementById("giftText");
+
+    const tryAgain = document.getElementById("tryAgain");
+
+
+    /* PILIHAN MOOD */
+
+    moodCards.forEach(card => {
+
+      card.addEventListener("click", () => {
+
+        const selectedMood = card.dataset.mood;
+        const mood = moods[selectedMood];
+
+        showResult(mood);
+
+      });
+
+    });
+
+
+    /* LIHAT HASIL */
+
+    function showResult(mood) {
+
+    resultEmoji.textContent = mood.emoji;
+    resultTitle.textContent = mood.title;
+    resultMessage.textContent = mood.message;
+    giftText.textContent = mood.gift;
+
+    questionScreen.style.display = "none";
+
+    resultScreen.style.display = "block";
+    resultScreen.classList.remove("show");
+
+    // Memaksa browser me-reset animasi
+    void resultScreen.offsetWidth;
+
+    resultScreen.classList.add("show");
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+    }
+
+
+    /* COBA LAGI */
+
+    tryAgain.addEventListener("click", () => {
+
+    resultScreen.classList.remove("show");
+
+    setTimeout(() => {
+
+        resultScreen.style.display = "none";
+        questionScreen.style.display = "block";
+
+    }, 200);
+
+    });
+
+  </script>
+
+</body>
+</html>
+```
